@@ -3,6 +3,7 @@ from parser import Parser
 from semantic import SemanticAnalyzer
 from optimizer import Optimizer
 from codegen import CodeGenerator
+from ast_graph import ASTGraph
 
 
  
@@ -34,6 +35,9 @@ parser = Parser(tokens)
 ast = parser.parse()
 print(ast)
 
+graph = ASTGraph()
+graph.build(ast)
+graph.render("my_ast")
 
  
 # 3. Semantic Analysis
@@ -41,7 +45,7 @@ print(ast)
 print("\nSEMANTIC CHECK")
 semantic = SemanticAnalyzer()
 semantic.analyze(ast)
-print("✔ Passed")
+print("Passed")
 
 
  
