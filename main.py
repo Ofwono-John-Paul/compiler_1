@@ -4,34 +4,66 @@ from semantic import SemanticAnalyzer
 from optimizer import Optimizer
 from codegen import CodeGenerator
 
+
+ 
+# Input Program
+ 
 code = """
 int x = 5 + 3;
 int y = x * 2;
 print(y);
-print(x);
 """
 
-# 1. Lex
+
+ 
+# 1. Lexer
+ 
+print("TOKENS")
 lexer = Lexer(code)
 tokens = lexer.tokenize()
 
-# 2. Parse
+for t in tokens:
+    print(t)
+
+
+ 
+# 2. Parser
+ 
+print("\nAST (PARSE TREE)")
 parser = Parser(tokens)
 ast = parser.parse()
+print(ast)
 
-# 3. Semantic check
+
+ 
+# 3. Semantic Analysis
+ 
+print("\nSEMANTIC CHECK")
 semantic = SemanticAnalyzer()
 semantic.analyze(ast)
+print("✔ Passed")
 
-# 4. Optimize AST
+
+ 
+# 4. Optimizer
+ 
+print("\nOPTIMIZED AST")
 optimizer = Optimizer()
-ast = optimizer.optimize(ast)
+optimized_ast = optimizer.optimize(ast)
+print(optimized_ast)
 
-# 5. Generate code
+
+ 
+# 5. Code Generation
+ 
+print("\nGENERATED CODE")
 generator = CodeGenerator()
-python_code = generator.generate(ast)
-
-print("Optimized Output:\n")
+python_code = generator.generate(optimized_ast)
 print(python_code)
 
+
+ 
+# 6. Execution
+ 
+print("\nEXECUTION OUTPUT")
 exec(python_code)
