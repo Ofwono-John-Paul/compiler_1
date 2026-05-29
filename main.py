@@ -1,73 +1,35 @@
-from lexer import Lexer
-from parser import Parser
-from semantic import SemanticAnalyzer
-from optimizer import Optimizer
-from codegen import CodeGenerator
-from ast_graph import ASTGraph
+from compiler_pipeline import DEFAULT_SOURCE, compile_source
 
 
- 
-# Input Program
- 
-code = """
-int x = 5 + 3;
-int y = x * 2;
-print(y);
-"""
+def main() -> None:
+    result = compile_source(DEFAULT_SOURCE)
+
+    if not result["success"]:
+        print(f"Compilation failed at {result['stage']}: {result['error']}")
+        return
+
+    print("TOKENS")
+    for token in result["tokens"]:
+        print(
+            f"{token['type']}:{token['value']} "
+            f"(Line {token['line']}, Col {token['column']})"
+        )
+
+    print("\nAST (PARSE TREE)")
+    print(result["parse_tree"])
+
+    print("\nSEMANTIC CHECK")
+    print("Passed")
+
+    print("\nOPTIMIZED AST")
+    print(result["optimized_ast"])
+
+    print("\nGENERATED CODE")
+    print(result["generated_code"])
+
+    print("\nEXECUTION OUTPUT")
+    print(result["execution_output"], end="")
 
 
- 
-# 1. Lexer
- 
-print("TOKENS")
-lexer = Lexer(code)
-tokens = lexer.tokenize()
-
-for t in tokens:
-    print(t)
-
-
- 
-# 2. Parser
- 
-print("\nAST (PARSE TREE)")
-parser = Parser(tokens)
-ast = parser.parse()
-print(ast)
-
-graph = ASTGraph()
-graph.build(ast)
-graph.render("my_ast")
-
- 
-# 3. Semantic Analysis
- 
-print("\nSEMANTIC CHECK")
-semantic = SemanticAnalyzer()
-semantic.analyze(ast)
-print("Passed")
-
-
- 
-# 4. Optimizer
- 
-print("\nOPTIMIZED AST")
-optimizer = Optimizer()
-optimized_ast = optimizer.optimize(ast)
-print(optimized_ast)
-
-
- 
-# 5. Code Generation
- 
-print("\nGENERATED CODE")
-generator = CodeGenerator()
-python_code = generator.generate(optimized_ast)
-print(python_code)
-
-
- 
-# 6. Execution
- 
-print("\nEXECUTION OUTPUT")
-exec(python_code)
+if __name__ == "__main__":
+    main()
